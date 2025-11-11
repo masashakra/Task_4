@@ -48,13 +48,17 @@ beforeAll(async () => {
 
   window.localStorage.setItem('token', registrationPayload.token);
 
-  const seedPerkResponse = await api.post('/perks', {
-    title: 'Integration Preview Benefit',
-    description: 'Baseline record created during setup for deterministic rendering checks.',
-    category: 'travel',
-    merchant: 'Integration Merchant',
-    discountPercent: 15
-  });
+  // Use a unique title each run to avoid duplicate-key conflicts
+const uniqueTitle = `Integration Preview Benefit ${Date.now()}-${crypto.randomUUID()}`;
+
+const seedPerkResponse = await api.post('/perks', {
+  title: uniqueTitle,
+  description: 'Baseline record created during setup for deterministic rendering checks.',
+  category: 'travel',
+  merchant: 'Integration Merchant',
+  discountPercent: 15
+});
+
 
   const seededPerk = seedPerkResponse.data.perk;
   if (seededPerk?._id) {
